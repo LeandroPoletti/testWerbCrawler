@@ -1,0 +1,49 @@
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/gocolly/colly"
+)
+
+//TODO permitir busca por produtos
+
+func main(){
+	c := colly.NewCollector()
+	
+
+	//Definir antes de visitar um site
+	c.OnRequest(func(r *colly.Request) {
+		fmt.Println("Visiting: ", r.URL)
+		//Pagina visitada no momento
+	})
+
+	c.OnError(func(r *colly.Response, err error) {
+		log.Println("Page visited: ", r.Request.URL)
+		//Se der merda
+	})
+
+	con := 0
+	c.OnHTML("a.a-link.normal", func(h *colly.HTMLElement) {
+		//mostrando todos os links associados
+		
+			con++
+			
+			if con<10{
+	
+				fmt.Println("\n" + h.Attr("href") + "\n")
+			}
+		
+
+})	
+	c.OnScraped(func(r *colly.Response) {
+		fmt.Println("Finalized scraping: ", r.Request.URL)
+	})
+
+
+	c.Visit("https://www.amazon.com.br/s?k=suplementos&sprefix=suplem%2Caps%2C369&ref=nb_sb_ss_ts-doa-p_1_6")
+
+		
+	
+}
