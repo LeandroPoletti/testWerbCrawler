@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go/doc"
+
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
@@ -40,7 +40,10 @@ func main() {
 	doc.Find("div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small").Each(func(i int, s *goquery.Selection) {
 		item := Produto{}
 
-		nome := s.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style").First()
+		item.nome= "aa"
+		produtos = append(produtos, item)
+
+		/* nome := s.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style").First()
 		nome = nome.Find("h2")
 		nome = nome.Find("a")
 		nome = nome.Find("span")
@@ -59,7 +62,7 @@ func main() {
 		//Link
 		complemento := "https://www.amazon.com.br"
 		endereco := s.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style")
-
+ */
 	})
 
 }
