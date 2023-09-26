@@ -8,9 +8,30 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Produto struct{
-	nome, link string
-	preco, avaliacao string
+type Produto struct {
+	nome, link, preco string
+}
+
+func pegarNome(pai *goquery.Selection) string {
+	nome := pai.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style").First()
+	nome = nome.Find("h2")
+	nome = nome.Find("a")
+	nome = nome.Find("span")
+
+	valorNome := nome.Text()
+	return valorNome
+}
+
+func pegarPreco(pai *goquery.Selection) (string, string) {
+	precoContent := pai.Find("s-price-instructions-style")
+	precoContent = precoContent.Find("a")
+	linkProd, _ := precoContent.Attr("href")
+	precoContent = precoContent.Find("span").First()
+	precoContent = precoContent.Find("span")
+	precoProd := precoContent.Text()
+
+	return precoProd, linkProd
+
 }
 
 func main() {
@@ -39,30 +60,17 @@ func main() {
 
 	doc.Find("div.a-section.a-spacing-small.puis-padding-left-small.puis-padding-right-small").Each(func(i int, s *goquery.Selection) {
 		item := Produto{}
+		//Nome
+		item.nome = pegarNome(s)
+		//FIXME
+		item.preco, item.link = pegarPreco(s)
 
-		item.nome= "aa"
 		produtos = append(produtos, item)
 
-		/* nome := s.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style").First()
-		nome = nome.Find("h2")
-		nome = nome.Find("a")
-		nome = nome.Find("span")
-		
-		item.nome = nome.Text()
-
-		//Nota
-		nota := s.Find("div.a-section.a-spacing-none.a-spacing-top-micro")
-		nota = nota.Find("div")
-		nota = nota.Find("span").First()
-		nota = nota.Find("span").First()
-
-		
-		item.avaliacao = nota.Text()
-
-		//Link
-		complemento := "https://www.amazon.com.br"
-		endereco := s.Find("div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style")
- */
+		fmt.Println("Informações produto:")
+		fmt.Println("Nome:", item.nome)
+		fmt.Println("Preço:", item.preco)
+		fmt.Println("Link:", item.link)
 	})
 
 }
