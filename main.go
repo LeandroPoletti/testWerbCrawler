@@ -22,12 +22,16 @@ func pegarNome(pai *goquery.Selection) string {
 	return valorNome
 }
 
-func pegarPreco(pai *goquery.Selection) (string, string) {
-	precoContent := pai.Find("s-price-instructions-style")
+func pegarPreco(pai *goquery.Selection, site string) (string, string) {
+	precoContent := pai.Find("div.s-price-instructions-style")
+	precoContent = precoContent.Find("div.a-color-base")
 	precoContent = precoContent.Find("a")
 	linkProd, _ := precoContent.Attr("href")
-	precoContent = precoContent.Find("span").First()
-	precoContent = precoContent.Find("span")
+
+	linkProd = site + linkProd
+
+	precoContent = precoContent.Find("span.a-price").First()
+	precoContent = precoContent.Find("span.a-offscreen").First()
 	precoProd := precoContent.Text()
 
 	return precoProd, linkProd
@@ -39,6 +43,7 @@ func main() {
 	var produtos []Produto
 
 	site := "https://www.amazon.com.br/s?k=suplementos&sprefix=suplem%2Caps%2C369&ref=nb_sb_ss_ts-doa-p_1_6"
+	siteBase := "https://www.amazon.com.br"
 
 	resp, err := http.Get(site)
 
@@ -63,7 +68,7 @@ func main() {
 		//Nome
 		item.nome = pegarNome(s)
 		//FIXME
-		item.preco, item.link = pegarPreco(s)
+		item.preco, item.link = pegarPreco(s, siteBase)
 
 		produtos = append(produtos, item)
 
@@ -71,6 +76,7 @@ func main() {
 		fmt.Println("Nome:", item.nome)
 		fmt.Println("Preço:", item.preco)
 		fmt.Println("Link:", item.link)
+		fmt.Println("\n")
 	})
 
 }
