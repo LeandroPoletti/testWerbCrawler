@@ -76,7 +76,7 @@ func main() {
 		fmt.Println("Nome:", item.nome)
 		fmt.Println("Preço:", item.preco)
 		fmt.Println("Link:", item.link)
-		fmt.Println("\n")
+		fmt.Println()
 	})
 
 }
